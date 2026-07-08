@@ -1,6 +1,6 @@
 const { getBody, parseQuery, sendJson } = require('./utils');
 const { authenticate } = require('./auth');
-const { pool } = require('../db');
+const { pool, baseUrl } = require('../db');
 
 // ---------- helpers ----------
 async function getUserLocation(userId) {
@@ -28,6 +28,12 @@ function formatRequest(r, currentUserId) {
   const isOwner = r.user_id === currentUserId;
   const isAnon = !!r.is_anonymous;
   const hidePoster = isAnon && !isOwner;
+
+  let profilePic = r.poster_profile_picture;
+  if (profilePic && !profilePic.startsWith('http')) {
+    profilePic = `${baseUrl}/uploads/${profilePic}`;
+  }
+
   return {
     id: r.id,
     request_type: r.request_type,
@@ -49,7 +55,7 @@ function formatRequest(r, currentUserId) {
     is_owner: isOwner,
     poster: hidePoster ? null : {
       name: `${r.poster_first_name} ${r.poster_last_name}`.trim(),
-      profile_picture: r.poster_profile_picture
+      profile_picture: profilePic
     }
   };
 }

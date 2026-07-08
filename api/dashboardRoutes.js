@@ -1,6 +1,6 @@
 const { sendJson } = require('./utils');
 const { authenticate } = require('./auth');
-const { pool } = require('../db');
+const { pool, baseUrl } = require('../db');
 
 module.exports = async function dashboardRoutes(req, res, method, url) {
   if (method === 'GET' && url === '/dashboard') {
@@ -31,6 +31,12 @@ module.exports = async function dashboardRoutes(req, res, method, url) {
 
       const formatRow = (r) => {
         const isAnon = !!r.is_anonymous;
+
+        let profilePic = r.poster_profile_picture;
+        if (profilePic && !profilePic.startsWith('http')) {
+          profilePic = `${baseUrl}/uploads/${profilePic}`;
+        }
+
         return {
           id: r.id,
           request_type: r.request_type,
@@ -48,7 +54,7 @@ module.exports = async function dashboardRoutes(req, res, method, url) {
           created_at: r.created_at,
           poster: isAnon ? null : {
             name: `${r.poster_first_name} ${r.poster_last_name}`.trim(),
-            profile_picture: r.poster_profile_picture
+            profile_picture: profilePic
           }
         };
       };

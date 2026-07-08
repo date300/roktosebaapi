@@ -31,7 +31,7 @@ function parseMultipart(req) {
         return;
       }
       const newFilename = `${Date.now()}_${Math.random().toString(36).substring(2, 8)}.${ext}`;
-      const savePath = path.join(uploadsDir, newFilename);
+      const savePath = path.join(__dirname, '..', 'uploads', newFilename);
       const writeStream = fs.createWriteStream(savePath);
       file.pipe(writeStream);
       fileCount++;
@@ -107,7 +107,7 @@ module.exports = async function handleProfileRoutes(req, res, method, url) {
       const allowedFields = [
         'first_name', 'last_name', 'phone', 'emergency_contact',
         'blood_group', 'division', 'district', 'upazila',
-        'gender', 'dob', 'last_donation_date'
+        'gender', 'dob', 'last_donation_date', 'account_type'
       ];
       const updates = [];
       const values = [];

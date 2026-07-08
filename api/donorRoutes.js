@@ -1,6 +1,6 @@
 const { parseQuery, sendJson } = require('./utils');
 const { authenticate } = require('./auth');
-const { pool } = require('../db');
+const { pool, baseUrl } = require('../db');
 
 const compatibleDonorGroups = {
   'A+': ['A+','A-','O+','O-'],
@@ -96,18 +96,25 @@ module.exports = async function donorRoutes(req, res, method, url) {
         [...values, ...proximity.values, limit, offset]
       );
 
-      let donors = rows.map(u => ({
-        id: u.id,
-        name: `${u.first_name} ${u.last_name}`.trim(),
-        blood_group: u.blood_group,
-        division: u.division,
-        district: u.district,
-        upazila: u.upazila,
-        profile_picture: u.profile_picture,
-        contact_number: u.phone,
-        last_donation_date: u.last_donation_date,
-        is_available: computeDonorAvailability(u.last_donation_date)
-      }));
+      let donors = rows.map(u => {
+        let profilePic = u.profile_picture;
+        if (profilePic && !profilePic.startsWith('http')) {
+          profilePic = `${baseUrl}/uploads/${profilePic}`;
+        }
+
+        return {
+          id: u.id,
+          name: `${u.first_name} ${u.last_name}`.trim(),
+          blood_group: u.blood_group,
+          division: u.division,
+          district: u.district,
+          upazila: u.upazila,
+          profile_picture: profilePic,
+          contact_number: u.phone,
+          last_donation_date: u.last_donation_date,
+          is_available: computeDonorAvailability(u.last_donation_date)
+        };
+      });
 
       if (availableOnly) {
         donors = donors.filter(d => d.is_available);

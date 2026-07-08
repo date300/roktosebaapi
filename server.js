@@ -8,6 +8,8 @@ const authRoutes = require('./api/authRoutes');
 const bloodRequestRoutes = require('./api/bloodRequestRoutes');
 const donorRoutes = require('./api/donorRoutes');
 const dashboardRoutes = require('./api/dashboardRoutes');
+const bloodBankRoutes = require('./api/bloodBankRoutes');
+const donationRoutes = require('./api/donationRoutes');
 
 const port = process.env.PORT || 3000;
 
@@ -40,6 +42,12 @@ const server = http.createServer(async (req, res) => {
   // Dashboard routes
   if (await dashboardRoutes(req, res, method, url)) return;
 
+  // Blood bank routes
+  if (await bloodBankRoutes(req, res, method, url)) return;
+
+  // Donation routes
+  if (await donationRoutes(req, res, method, url)) return;
+
   // Static file serving (uploads)
   if (method === 'GET' && url.startsWith('/uploads/')) {
     const filename = path.basename(url.slice('/uploads/'.length));
@@ -47,7 +55,13 @@ const server = http.createServer(async (req, res) => {
     const mimeType = allowedImageTypes[ext];
     if (!mimeType) { sendJson(res, 404, { message: 'File not found' }); return; }
 
-    fs.readFile(path.join(uploadsDir, filename), (err, data) => {
+    // Try root uploads first, then api/uploads
+    let filePath = path.join(__dirname, 'uploads', filename);
+    if (!fs.existsSync(filePath)) {
+      filePath = path.join(__dirname, 'api', 'uploads', filename);
+    }
+
+    fs.readFile(filePath, (err, data) => {
       if (err) { sendJson(res, 404, { message: 'File not found' }); return; }
       res.writeHead(200, { 'Content-Type': mimeType, 'Cache-Control': 'public, max-age=31536000' });
       res.end(data);
