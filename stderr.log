@@ -1,0 +1,31 @@
+nohup: ignoring input
+/home/ltcmlgtn/roktosebaapi/server.js:36
+const server = http.createServer(async (req, res) => {
+               ^
+
+ReferenceError: http is not defined
+    at Object.<anonymous> (/home/ltcmlgtn/roktosebaapi/server.js:36:16)
+    at Module._compile (node:internal/modules/cjs/loader:1521:14)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1623:10)
+    at Module.load (node:internal/modules/cjs/loader:1266:32)
+    at Module._load (node:internal/modules/cjs/loader:1091:12)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12)
+    at node:internal/main/run_main_module:28:49
+
+Node.js v20.20.2
+Profile picture upload error: Error: Unsupported content type: application/json; charset=UTF-8
+    at getInstance (/home/ltcmlgtn/roktosebaapi/node_modules/busboy/lib/index.js:36:9)
+    at module.exports (/home/ltcmlgtn/roktosebaapi/node_modules/busboy/lib/index.js:56:10)
+    at /home/ltcmlgtn/roktosebaapi/api/profile.js:16:20
+    at new Promise (<anonymous>)
+    at parseMultipart (/home/ltcmlgtn/roktosebaapi/api/profile.js:15:10)
+    at handleProfileRoutes (/home/ltcmlgtn/roktosebaapi/api/profile.js:151:31)
+    at Server.<anonymous> (/home/ltcmlgtn/roktosebaapi/server.js:32:13)
+Profile picture upload error: Error: Unsupported content type: application/json; charset=UTF-8
+    at getInstance (/home/ltcmlgtn/roktosebaapi/node_modules/busboy/lib/index.js:36:9)
+    at module.exports (/home/ltcmlgtn/roktosebaapi/node_modules/busboy/lib/index.js:56:10)
+    at /home/ltcmlgtn/roktosebaapi/api/profile.js:16:20
+    at new Promise (<anonymous>)
+    at parseMultipart (/home/ltcmlgtn/roktosebaapi/api/profile.js:15:10)
+    at handleProfileRoutes (/home/ltcmlgtn/roktosebaapi/api/profile.js:151:31)
+    at Server.<anonymous> (/home/ltcmlgtn/roktosebaapi/server.js:32:13)
